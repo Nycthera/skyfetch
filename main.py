@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import requests
-from datetime import date
+from datetime import date, datetime
 from dotenv import load_dotenv
 import os
 import sys
@@ -16,7 +16,6 @@ from rich.panel import Panel
 # ======================
 load_dotenv()
 DEFAULT_API_KEY = os.getenv('API_KEY')
-
 console = Console()
 
 # ======================
@@ -190,6 +189,18 @@ def map_moon_icon(phase):
     return MOON_ICONS["new"]
 
 # ======================
+# Helper Functions
+# ======================
+def display_weather_table(weather):
+    table = Table(title="Current Weather", show_header=True, header_style="bold cyan")
+    table.add_column("Metric")
+    table.add_column("Value")
+    table.add_row("Temperature", f"{weather['temperature']}°C")
+    table.add_row("Wind Speed", f"{weather.get('windspeed','N/A')} m/s")
+    table.add_row("Weather Code", str(weather.get('weathercode','N/A')))
+    console.print(table)
+
+# ======================
 # Main CLI
 # ======================
 def main():
@@ -202,16 +213,22 @@ def main():
     parser.add_argument("--api-key", type=str, help="Visual Crossing API Key (overrides .env)")
     parser.add_argument("--forecast", "-F", action="store_true", help="Show weather forecast")
     parser.add_argument("--forecast-days", "-D", type=int, default=3, help="Number of days for forecast (default: 3)")
+    parser.add_argument("--time", action="store_true", help="Show current time")
     args = parser.parse_args()
 
     location = get_location()
     if args.lat and args.lon:
         location['lat'], location['lon'] = args.lat, args.lon
 
-    if not any([args.moon, args.weather, args.forecast, args.all]):
+    if not any([args.moon, args.weather, args.forecast, args.all, args.time]):
         args.all = True
 
     api_key = args.api_key or DEFAULT_API_KEY
+
+    # ---------------- Current Time ----------------
+    if args.time or args.all:
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        console.print(Panel.fit(f"[bold yellow]{now}[/bold yellow]", title="Current Time"))
 
     # ---------------- Weather ----------------
     if args.weather or args.all:
@@ -219,6 +236,7 @@ def main():
         if w:
             icon = map_weather_icon(w["weathercode"])
             console.print(Panel.fit(f"{w['temperature']}°C\n{icon}", title=f"Weather in {location['city']}"))
+            display_weather_table(w)
 
     # ---------------- Moon ----------------
     if args.moon or args.all:
@@ -228,7 +246,7 @@ def main():
             lunar_date = gregorian_to_lunar(date.today())
             console.print(Panel.fit(f"Phase: {m:.2f}\n{icon}\nLunar Date: {lunar_date}", title="Moon"))
 
-   # ---------------- Forecast ----------------
+    # ---------------- Forecast ----------------
     if args.forecast:
         forecast = fetch_forecast(location['lat'], location['lon'], args.forecast_days)
         if forecast:
@@ -244,7 +262,6 @@ def main():
                     border_style="bright_blue"
                 )
                 console.print(panel)
-
 
 if __name__ == "__main__":
     main()
