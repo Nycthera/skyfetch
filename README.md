@@ -7,7 +7,7 @@ This is a simple CLI tool built with Visual Crossing API to get your weather and
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`API_KET` = xxx
+`API_KEY` = xxx
 
 An example is .env.example
 To use this tool, you need a Visual Crossing API key. You can obtain one by signing up at [Visual Crossing](https://www.visualcrossing.com).
