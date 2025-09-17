@@ -40,3 +40,9 @@ python main.py --all
 ## Acknowledgements
 
 [Visual Crossing API](https://www.visualcrossing.com/)
+
+
+btw. Its meant for Unix based OS's (mac and linux)
+to run, download the release, and run ./main (its chmod +x already!) 
+
+my api key...:VSVWN6ESR7NTYTP3HTV4YFKHC (wow. i just leaked my api key.)
