@@ -1,5 +1,5 @@
 
-# Project Title
+# Skyfetch
 
 This is a simple CLI tool built with Visual Crossing API to get your weather and moon data
 
@@ -46,3 +46,5 @@ btw. Its meant for Unix based OS's (mac and linux)
 to run, download the release, and run ./main (its chmod +x already!) 
 
 my api key...:VSVWN6ESR7NTYTP3HTV4YFKHC (wow. i just leaked my api key.)
+
+Oh. amazing. apparently you have to run chmod +x on the file too. so, download, the release, find it, run in terminal, chmod +x main, then you can run it
